@@ -6,8 +6,8 @@ VERDE = (0,255,0)
 BLANCO = (255,255,255)
 
 
-ANCHO = 800
-ALTO = 600
+ANCHO = 1400
+ALTO = 700
 FPS = 30
 
 
@@ -17,7 +17,10 @@ PANTALLA = pygame.display.set_mode((ANCHO,ALTO)) #px
 pygame.display.set_caption("Mario Bros")
 
 imagen_mario = pygame.image.load("141.png")
-imagen_mario = pygame.transform.scale(imagen_mario,(60,80))
+imagen_mario = pygame.transform.scale(imagen_mario,(55,70))
+
+imagen_fondo = pygame.image.load("fondo_mario.jpg")
+imagen_fondo = pygame.transform.scale(imagen_fondo,(ANCHO,ALTO))
 
 imagen_vertical = pygame.Surface((100,100))
 imagen_vertical.fill(VERDE)
@@ -28,7 +31,8 @@ imagen_horizontal = pygame.Surface((100,100))
 imagen_horizontal.fill(AZUL)
 
 rectangulo_horizontal = imagen_mario.get_rect()
-rectangulo_horizontal.center = (ANCHO//2, ALTO//2)
+rectangulo_horizontal.bottom = 607
+rectangulo_horizontal.left = 54
 
 clock = pygame.time.Clock()
 
@@ -38,7 +42,9 @@ while True:
         if evento.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    PANTALLA.fill(NEGRO)
+        elif evento.type == pygame.MOUSEBUTTONDOWN:
+            print(evento.pos)
+    PANTALLA.blit(imagen_fondo , (0,0))
     PANTALLA.blit(imagen_vertical, rectangulo_vertical)
     # PANTALLA.blit(imagen_horizontal, rectangulo_horizontal)
     PANTALLA.blit(imagen_mario, rectangulo_horizontal)
