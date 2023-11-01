@@ -16,10 +16,10 @@ pygame.init()
 PANTALLA = pygame.display.set_mode((ANCHO,ALTO)) #px
 pygame.display.set_caption("Mario Bros")
 
-imagen_mario = pygame.image.load("141.png")
+imagen_mario = pygame.image.load("fotos/141.png")
 imagen_mario = pygame.transform.scale(imagen_mario,(55,70))
 
-imagen_fondo = pygame.image.load("fondo_mario.jpg")
+imagen_fondo = pygame.image.load("fotos/fondo_mario.jpg")
 imagen_fondo = pygame.transform.scale(imagen_fondo,(ANCHO,ALTO))
 
 imagen_vertical = pygame.Surface((100,100))

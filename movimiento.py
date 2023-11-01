@@ -35,6 +35,8 @@ while True:
         if evento.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
+    
     PANTALLA.fill(NEGRO)
     PANTALLA.blit(imagen_vertical, rectangulo_vertical)
     rectangulo_vertical.y += 10
@@ -48,3 +50,5 @@ while True:
 
 
     pygame.display.flip()
+
+

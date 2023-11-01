@@ -1,6 +1,7 @@
 import pygame , sys
 from pygame.locals import *
 from configuraciones import *
+
 AZUL = (0,0,255)
 NEGRO = (0,0,0)
 ROJO = (255,0,0)
@@ -12,7 +13,19 @@ ANCHO = 1400
 ALTO = 700
 FPS = 30
 
+def mover_personaje(rectangulo_horizontal, velocidad):
+    rectangulo_horizontal.x += velocidad
 
+def animar_personaje(acciones_personaje,pantalla,rectangulo_horizontal):
+    global contador_pasos
+    largo = len(acciones_personaje)
+    if contador_pasos >= largo:
+        contador_pasos = 0
+    pantalla.blit(acciones_personaje[contador_pasos],rectangulo_horizontal)
+    contador_pasos += 1
+
+# def actualizar_pantalla(pantalla , flag_estado , velocidad):
+#     pantalla.blit(imagen_fondo,(0,0))
 pygame.init()
 
 PANTALLA = pygame.display.set_mode((ANCHO,ALTO)) #px
@@ -21,9 +34,14 @@ pygame.display.set_caption("Mario Bros")
 imagen_mario = pygame.image.load("fotos/141.png")
 imagen_mario_izq = pygame.image.load("fotos/140.png")
 imagen_mario_der = pygame.image.load("fotos/141.png")
+imagen_mario_salto_der = pygame.image.load("fotos/146.png")
+imagen_mario_salto_izq = pygame.image.load("fotos/143.png")
 imagen_mario = pygame.transform.scale(imagen_mario,(55,70))
 imagen_mario_izq = pygame.transform.scale(imagen_mario_izq,(55,70))
 imagen_mario_der = pygame.transform.scale(imagen_mario_der,(55,70))
+imagen_mario_salto_izq = pygame.transform.scale(imagen_mario_salto_izq,(55,70))
+imagen_mario_salto_der = pygame.transform.scale(imagen_mario_salto_der,(55,70))
+
 
 imagen_fondo = pygame.image.load("fotos/fondo_mario.jpg")
 imagen_fondo = pygame.transform.scale(imagen_fondo,(ANCHO,ALTO))
@@ -44,7 +62,7 @@ rectangulo_horizontal.left = 54
 
 
 
-# MUSICA
+#MUSICA
 pygame.mixer.music.load('musica_mario.mp3') #ruta de acceso relativa a la cancion
 pygame.mixer.music.play(-1) #el minimo
 pygame.mixer.music.set_volume(0.5) #1 es el maximo, set_volumen sirve para cambiar q tan fuerte suena
@@ -91,6 +109,8 @@ while True:
         print ('derecha')
         flag_estado = "derecha"
     elif lista_teclas[pygame.K_UP]:
+        imagen_mario = imagen_mario_salto_der
+        
         print("salto")
         flag_estado = "salto"
     else:
@@ -108,20 +128,22 @@ while True:
         if nueva_x > 0 and nueva_x < ANCHO - rectangulo_horizontal.width:
             rectangulo_horizontal.x += 10
     elif flag_estado == "salto":
-        pass
+        rectangulo_horizontal.y -= 10
     else:
         pass
 
-    lista_imagenes = [personaje_quieto]
-    def animar(pantalla, lista_imagenes):
-        
-        animacion = lista_imagenes
-        largo = len(animacion)
-        
-        if contador_pasos >= largo:
-            contador_pasos = 0
-        pantalla.blit(animacion[contador_pasos],lados["main"])
-        contador_pasos += 1
+    #personaje
+    contador_pasos = 0
+    x_inicial = ANCHO/2 - 300
+    y_inicial = 650
+    posicion_actual_x = 0
+    velocidad = 10
+
+    lista_imagenes = [personaje_quieto,personaje_camina,personaje_salta]
+    # rectangulo_horizontal = personaje_salta[0].get_rect()
+
+
+
 
 
     pygame.display.flip()
