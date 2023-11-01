@@ -13,16 +13,11 @@ ANCHO = 1400
 ALTO = 700
 FPS = 30
 
+
 def mover_personaje(rectangulo_horizontal, velocidad):
     rectangulo_horizontal.x += velocidad
 
-def animar_personaje(acciones_personaje,pantalla,rectangulo_horizontal):
-    global contador_pasos
-    largo = len(acciones_personaje)
-    if contador_pasos >= largo:
-        contador_pasos = 0
-    pantalla.blit(acciones_personaje[contador_pasos],rectangulo_horizontal)
-    contador_pasos += 1
+
 
 # def actualizar_pantalla(pantalla , flag_estado , velocidad):
 #     pantalla.blit(imagen_fondo,(0,0))
@@ -62,10 +57,10 @@ rectangulo_horizontal.left = 54
 
 
 
-#MUSICA
-pygame.mixer.music.load('musica_mario.mp3') #ruta de acceso relativa a la cancion
-pygame.mixer.music.play(-1) #el minimo
-pygame.mixer.music.set_volume(0.5) #1 es el maximo, set_volumen sirve para cambiar q tan fuerte suena
+# #MUSICA
+# pygame.mixer.music.load('musica_mario.mp3') #ruta de acceso relativa a la cancion
+# pygame.mixer.music.play(-1) #el minimo
+# pygame.mixer.music.set_volume(0.5) #1 es el maximo, set_volumen sirve para cambiar q tan fuerte suena
 
 clock = pygame.time.Clock()
 
