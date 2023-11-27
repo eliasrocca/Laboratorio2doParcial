@@ -82,9 +82,13 @@ class NivelDos(Nivel):
 
         lista_consumibles = [consumibles,consumible_2]
 
-        lista_enemigos = [enemigo_1,enemigo_3]
+        lista_enemigos = [enemigo_1,enemigo_3,enemigo_estatic]
 
-        lista_enemigos_2 = [enemigo_estatic]
+        
 
         lista_vidas = [vida_1,vida_2,vida_3]
-        super().__init__(pantalla,mario,lista_plataformas,imagen_fondo,meta,lista_consumibles,lista_enemigos,lista_vidas,lista_enemigos_2)
+        super().__init__(pantalla,mario,lista_plataformas,imagen_fondo,meta,lista_consumibles,lista_enemigos,lista_vidas)
+
+    def verificar_gano_nivel(self):
+        if self.jugador.rect.colliderect(self.meta):
+            self.flag_gano = True

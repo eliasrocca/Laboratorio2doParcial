@@ -8,6 +8,7 @@ class Consumible:
         self.rect.x = eje_x
         self.rect.y = eje_y
         self.se_blitea = True
+        self.puntos = 5
         
 
     def update(self, pantalla):

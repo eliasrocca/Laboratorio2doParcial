@@ -11,7 +11,7 @@ FPS = 60
 reloj = pygame.time.Clock()
 PANTALLA = pygame.display.set_mode((WIDTH, HEIGHT))
 
-form_prueba = FormPrueba(PANTALLA,200,100,900,350,"gold","Magenta", 5,True)
+form_prueba = FormPrueba(PANTALLA)
 while True:
     reloj.tick(FPS)
     eventos = pygame.event.get()

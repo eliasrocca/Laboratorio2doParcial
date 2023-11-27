@@ -12,7 +12,7 @@ class Enemigo_estatico:
         self.rect.y = eje_y
         self.lados = obtener_rectangulos(self.rect)
         self.se_blitea = True
-
+        self.puntos = 5
 
     def update(self, pantalla,lista_plataformas):
         if self.se_blitea:
@@ -23,6 +23,9 @@ class Enemigo_estatico:
                 for lado in self.lados:
                     pygame.draw.rect(pantalla,(0,0,255),self.lados[lado],2)
         
+
+    def recibir_daño(self):
+        self.se_blitea = False
 
         
     

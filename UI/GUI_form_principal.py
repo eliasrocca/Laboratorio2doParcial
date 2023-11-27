@@ -7,37 +7,54 @@ from UI.GUI_textbox import *
 from UI.GUI_label import *
 from UI.GUI_form import *
 from UI.GUI_button_image import *
-from GUI_form_menu_score import *
+from UI.GUI_form_menu_score import *
+from UI.GUI_form_niveles import *
+from utilidades import *
 
 
     
-class FormPrueba(Form):
-    def __init__(self, screen, x,y,w,h,color_background, color_border = "Black", border_size = -1, active = True):
-        super().__init__(screen, x,y,w,h,color_background, color_border, border_size, active)
+class FormPrincipal(Form):
+    def __init__(self, screen):
+        x = 200
+        y = 100
+        w = 900
+        h = 350
+        color_background = "black"
+        color_border = "Magenta"
+        border_size = 5
+        
+        super().__init__(screen, x,y,w,h,color_background, color_border, border_size)
 
         self.volumen = 0.2
         self.flag_play = True
 
         pygame.mixer.init()
 
-        self.txtbox = TextBox(self._slave, x , y, 50, 50 , 150, 30, "Gray", "White","Red", "Blue",2,font = "Comic Sans", font_size = 15, font_color = "Black")
-        self.btn_play = Button(self._slave,x,y,100,100,100,50,"Red","Blue",self.btn_play_click,"Nombre","Pause", font = "Verdana", font_size = 15, font_color= "White")
-        self.label_volumen = Label(self._slave,650,190,100,50,"20%","Comic Sans",15,"Red","Laboratorio2doParcial/fotos/table_png.png")
-        self.slider_volumen = Slider(self._slave,x,y,100,200,500,15,self.volumen,"Blue","White",)
-        self.btn_tabla = Button_Image(self._slave,x,y,255,100,50,50,"Laboratorio2doParcial/fotos/boton_menu.webp",self.btn_tabla_click,"lalal")
+        self.txtbox = TextBox(self._slave, x , y, 375, 70 , 150, 30, "Gray", "White","Red", "Blue",2,font = "Comic Sans", font_size = 15, font_color = "Black")
+        self.btn_play = Button(self._slave,x,y,400,250,100,50,"Red","Blue",self.btn_play_click,"Nombre","Pause", font = "Verdana", font_size = 15, font_color= "White")
+        self.label_volumen = Label(self._slave,105,305,30,30,"20%","Comic Sans",15,"Red","Laboratorio2doParcial/fotos/table_png.png")
+        self.slider_volumen = Slider(self._slave,x,y,20,280,200,15,self.volumen,"Blue","White",)
+        self.btn_tabla = Button_Image(self._slave,x,y,825,260,50,50,"Laboratorio2doParcial/fotos/boton_menu.webp",self.btn_tabla_click,"lalal")
+        self.btn_jugar = Button_Image(self._slave,x,y,755,260,50,50,"Laboratorio2doParcial/fotos/boton_niveles.png",self.btn_jugar_click,"Coronacion absoluta")
+
+        self.imagen_bg = PictureBox(self._slave,275,0,350,h,"Laboratorio2doParcial/fotos/mario_menu.jpg")
 
 
+        self.lista_widgets.append(self.imagen_bg)
         self.lista_widgets.append(self.txtbox)
         self.lista_widgets.append(self.btn_play)
         self.lista_widgets.append(self.label_volumen)
         self.lista_widgets.append(self.slider_volumen)
         self.lista_widgets.append(self.btn_tabla)
+        self.lista_widgets.append(self.btn_jugar)
+
     def render(self):
         self._slave.fill(self._color_background)
 
     def update(self, lista_eventos):
         if self.verificar_dialog_result():
             if self.active:
+                self._master.fill("black")
                 self.draw()
                 self.render()
                 for widget in self.lista_widgets:
@@ -71,14 +88,19 @@ class FormPrueba(Form):
     
     
     def btn_tabla_click(self, param):
-        dic_score = [{"Jugador": "Elias", "Score": 1000},
-                    {"Jugador": "Dapa", "Score": 7},
-                    {"Jugador": "Diego", "Score": 100}]
+        ancho_pantalla = self._master.get_width()
+        alto_pantalla = self._master.get_height()
+        w = 500
+        h = 550
+        x = ancho_pantalla / 2 - w/2
+        y = alto_pantalla /2 - h/2
+        dic_score = obtener_top_jugadores(3)
+        print(dic_score)
         form_puntaje = FormMenuScore(self._master,
-                                     250,
-                                     25,
-                                     500,
-                                     550,
+                                     x,
+                                     y,
+                                     w,
+                                     h,
                                      (220,0,220),
                                      "White",
                                      True,
@@ -90,3 +112,12 @@ class FormPrueba(Form):
                                      )
         
         self.show_dialog(form_puntaje)
+
+    def btn_jugar_click(self, param):
+        nombre_player = self.txtbox.get_text()
+        nombre_player = nombre_player.strip()
+        nombre_player = nombre_player.title()
+        if nombre_player != "":
+            datos_jugador = obtener_progreso(nombre_player)
+            form_jugar = FormMenuNiveles(self._master,"Laboratorio2doParcial/fotos/fondo_menu_jugar.jpg",datos_jugador)
+            self.show_dialog(form_jugar)

@@ -3,6 +3,7 @@ from configuraciones import *
 from plataforma import *
 from personaje import *
 from utilidades import *
+from modo import *
 class Enemigo:
     def __init__(self,eje_x,eje_y,ancho,alto,path_imagen) -> None:
         self.imagen = pygame.image.load(path_imagen)
@@ -15,12 +16,15 @@ class Enemigo:
         self.velocidad = 5
         self.se_blitea = True
         self.esta_en_pantalla = True
+        self.puntos = 5
+        
+        
 
     def update(self, pantalla,lista_plataformas):
         if self.se_blitea:
             pantalla.blit(self.imagen,self.rect)
         
-            self.mover()
+            self.mover(pantalla)
             self.verificar_limites(lista_plataformas)
             if get_mode():
                 for lado in self.lados:
@@ -52,7 +56,7 @@ class Enemigo:
             self.orientacion = "izquierda"
 
 
-    def mover(self):
+    def mover(self,pantalla):
         if self.orientacion == "derecha":
             movimiento = self.velocidad
         elif self.orientacion == "izquierda":
@@ -60,5 +64,11 @@ class Enemigo:
         
         for lado in self.lados:
             self.lados[lado].x += movimiento
+
+    def recibir_daño(self):
+        self.se_blitea = False
+
+
+
         
 

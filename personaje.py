@@ -4,10 +4,13 @@ from modo import *
 from utilidades import *
 from objetos_recolectables import *
 from enemigos import *
+from meta import *
+
 
 
 class Mario:
     def __init__(self,eje_x,eje_y) -> None:
+        self.puntos_sumados = 0
         self.velocidad = 7
         self.salto = 0
         self.velocidad_salto = 20
@@ -22,6 +25,7 @@ class Mario:
         self.toco_abajo = False
         self.vidas = 3
         self.mario_muere = False
+        self.flag_gano = False
         
 
         
@@ -32,11 +36,12 @@ class Mario:
         self.rect.y = eje_y
         self.lados = obtener_rectangulos(self.rect)
 
-    def update(self,lista_teclas,pantalla, lista_plataformas,lista_consumibles,lista_enemigos,lista_vidas,lista_enemigos_2):
+    def update(self,lista_teclas,pantalla, lista_plataformas,lista_consumibles,lista_enemigos,lista_vidas,meta):
         
-        self.verificar_colisiones(lista_plataformas,lista_consumibles,lista_enemigos,lista_vidas,lista_enemigos_2)
+        self.verificar_colisiones(lista_plataformas,lista_consumibles,lista_enemigos,lista_vidas,meta,pantalla)
         self.movimiento(lista_teclas,pantalla)
         self.gravedad(lista_plataformas)
+        self.verificar_muerte(pantalla)
         if get_mode():
             for lado in self.lados:
                 pygame.draw.rect(pantalla,(0,0,255),self.lados[lado],2)
@@ -96,14 +101,14 @@ class Mario:
         if lista_teclas[pygame.K_LEFT]:
             if self.esta_saltando == False:
                 self.imagen = personaje_camina_izq
-            if not self.toco_lado_izq:
+            if not self.toco_lado_izq and self.rect.left > 0:
                 self.rect.x -= self.velocidad
             self.estado = "izquierda"
             self.orientacion = "izquierda"
         elif lista_teclas[pygame.K_RIGHT]:
             if self.esta_saltando == False:
                 self.imagen = personaje_camina_der
-            if not self.toco_lado_der:
+            if not self.toco_lado_der and self.rect.right < pantalla.get_width():
                 self.rect.x += self.velocidad
 
             self.estado = "derecha"
@@ -115,6 +120,8 @@ class Mario:
             else:
                 self.imagen = personaje_quieto_izq
 
+        
+
 
             #print("quieto")
 
@@ -122,11 +129,20 @@ class Mario:
         self.animar(self.imagen,pantalla)
 
 
-    def resetear_posicion(self,eje_x_eje_y):
-        pass
+    def recibir_daño(self,lista_vidas):
+        for vida in lista_vidas:
+            if vida.se_blitea:
+                    vida.se_blitea = False
+                    self.vidas -= 1
+                    self.mario_muere = True
+                    for lado in self.lados:
+                        self.lados[lado].x = 54
+                        self.lados[lado].y = 537
+                    break
+        
 
 
-    def verificar_colisiones(self,lista_plataformas,lista_consumibles,lista_enemigos,lista_vidas,lista_enemigos_2):
+    def verificar_colisiones(self,lista_plataformas,lista_consumibles,lista_enemigos,lista_vidas,meta,pantalla):
         self.toco_lado_der = False
         self.toco_lado_izq = False
         self.toco_abajo = False
@@ -139,34 +155,45 @@ class Mario:
                 self.toco_abajo = True
 
         for consumible in lista_consumibles:
-            if self.rect.colliderect(consumible.rect):
+            if consumible.se_blitea and self.rect.colliderect(consumible.rect):
                 consumible.se_blitea = False
+                self.puntos_sumados += consumible.puntos
 
-        for enemigo in lista_enemigos_2:
-            if self.lados['bottom'].colliderect(enemigo.lados['top']):
-                enemigo.se_blitea = False
+
+
+
 
         for enemigo in lista_enemigos:
-            if self.lados['bottom'].colliderect(enemigo.lados['top']):
-                enemigo.se_blitea = False
-
-            for vida in lista_vidas:
-                if vida.se_blitea:
+            if enemigo.se_blitea:
+                if self.lados['bottom'].colliderect(enemigo.lados['top']):
+                    enemigo.recibir_daño()
+                    self.esta_saltando = True
+                    self.puntos_sumados += enemigo.puntos
+                else:
                     if self.lados['right'].colliderect(enemigo.lados['left']) or self.lados['left'].colliderect(enemigo.lados['right']):
-                        vida.se_blitea = False
-                        self.vidas -= 1
-                        self.mario_muere = True
-                        for lado in self.lados:
-                            self.lados[lado].x = 54
-                            self.lados[lado].y = 537
+                        self.recibir_daño(lista_vidas)
 
-                    # mario = Mario(54,537)
+
+
+
+        
                     
+
+                    
+
 
                     
 
         
-
+    def verificar_muerte(self,pantalla):
+        fuente = pygame.font.Font(None, 90)
+        if self.vidas == 0:
+            game_over = fuente.render("GAME OVER", True, "red")
+            pantalla.blit(game_over, (500, 250))
+            for lado in self.lados:
+                self.lados[lado].x = -100
+                self.lados[lado].y = 0
+                break
 
 
                 

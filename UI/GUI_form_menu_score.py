@@ -64,7 +64,7 @@ class FormMenuScore(Form):
                                       font = "Verdana",
                                       font_size= 23,
                                       font_color = (0,255,0),
-                                      path_image = "Laboratorio2doParcial/fotos/home_score.png")
+                                      path_image = "Laboratorio2doParcial/fotos/home_white.png")
         
 
         self.lista_widgets.append(self._btn_home)
@@ -74,6 +74,7 @@ class FormMenuScore(Form):
     
     def update(self, lista_eventos):
         if self.active:
+            self._master.fill("black")
             for widget in self.lista_widgets:
                 widget.update(lista_eventos)
             self.draw()
